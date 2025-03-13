@@ -8,33 +8,35 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     const [showDocs, setShowDocs] = useState(true);
 
     return (
-        <SidebarProvider>
-            <div className="flex h-screen flex-col">
-                <header
-                    className="bg-gray-100 p-4 flex justify-between items-center w-full fixed top-0 left-0 right-0 z-10">
-                    <SidebarTrigger className="block text-white"/>
-                    <div className="flex items-center gap-4">
-                        <h1 className="text-lg font-semibold">Header</h1>
-                    </div>
-                    <Button variant="ghost" onClick={() => setShowDocs(!showDocs)}>
-                        API Docs
-                    </Button>
-                </header>
+        <div className="flex h-screen flex-col">
+            {/* 헤더 부분: 사이드바를 제외한 상단 영역에 위치 */}
+            <header className="bg-gray-100 p-4 flex items-center w-full z-10 fixed top-0 left-0 right-0">
+                <Button variant="ghost" onClick={() => setShowDocs(!showDocs)}>
+                    Overview
+                </Button>
+                <Button variant="ghost" onClick={() => setShowDocs(!showDocs)}>
+                    API Docs
+                </Button>
+                <Button variant="ghost" onClick={() => setShowDocs(!showDocs)}>
+                    Create project
+                </Button>
+            </header>
 
-                <div className="flex flex-1 pt-16">
-                    <AppSidebar/>
+            {/* 사이드바와 메인 컨텐츠 영역 */}
+            <SidebarProvider>
+                <div className="flex h-screen pt-16"> {/* pt-16으로 헤더 공간을 확보 */}
+                    <AppSidebar />
                     <main className="flex-1 p-4 overflow-auto">
                         {showDocs ? (
                             <div className="h-full overflow-auto bg-white p-4">
-                                <RedocStandalone   specUrl="http://petstore.swagger.io/v2/swagger.json" />
+                                <RedocStandalone specUrl="http://petstore.swagger.io/v2/swagger.json" />
                             </div>
                         ) : (
                             children
                         )}
                     </main>
                 </div>
-            </div>
-        </SidebarProvider>
+            </SidebarProvider>
+        </div>
     );
 }
-
