@@ -1,14 +1,13 @@
-import './App.css'
-import { Button } from '@/components/ui/button'
-import Layout from "@/layout";
+// import './App.css'
+import Layout from "@/layout/layout";
+
 
 function App() {
   return (
       <div>
-          <div className="flex flex-col items-center justify-center min-h-svh">
-              <Button>Click me</Button>
-          </div>
-          <Layout><div>hello</div></Layout>
+          <Layout>
+              <div className="p-1">This is the main content area.</div>
+          </Layout>
       </div>
   )
 }
