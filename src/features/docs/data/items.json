@@ -1,0 +1,70 @@
+{
+  "items": [
+    {
+      "title": "platform-architecture",
+      "type": "group",
+      "items": [
+        {
+          "title": "components",
+          "type": "group",
+          "items": [
+            {
+              "title": "ci-components",
+              "type": "project",
+              "items": []
+            }
+          ]
+        },
+        {
+          "title": "developer-portal",
+          "type": "group",
+          "items": [
+            {
+              "title": "backstage-frontend",
+              "type": "project",
+              "items": []
+            },
+            {
+              "title": "backstage-backend",
+              "type": "project",
+              "items": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "sre",
+      "type": "group",
+      "items": [
+        {
+          "title": "ci",
+          "type": "group",
+          "items": [
+            {
+              "title": "gitlab",
+              "type": "project",
+              "items": []
+            }
+          ]
+        },
+        {
+          "title": "cd",
+          "type": "group",
+          "items": [
+            {
+              "title": "system-platform",
+              "type": "project",
+              "items": []
+            },
+            {
+              "title": "nobody",
+              "type": "project",
+              "items": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

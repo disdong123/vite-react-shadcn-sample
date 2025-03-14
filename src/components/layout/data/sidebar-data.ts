@@ -71,6 +71,11 @@ export const sidebarData: SidebarData = {
           icon: IconMessages,
         },
         {
+          title: 'Docs',
+          url: '/docs',
+          icon: IconMessages,
+        },
+        {
           title: 'Users',
           url: '/users',
           icon: IconUsers,
