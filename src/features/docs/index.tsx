@@ -4,17 +4,18 @@ import { IconSearch } from '@tabler/icons-react';
 import { cn } from '@/lib/utils';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Header } from '@/components/layout/header';
 import { Main } from '@/components/layout/main';
 import { ProfileDropdown } from '@/components/profile-dropdown';
 import { Search } from '@/components/search';
 import { ThemeSwitch } from '@/components/theme-switch';
-import { type Item } from './data/chat-types';
+import { type Item } from './data/item-types.ts';
+import { RedocStandalone } from 'redoc';
+
 import { items } from './data/items.json';
 
 
-export default function Chats() {
+export default function Docs() {
   const [search, setSearch] = useState('')
   const [selectedItem, setSelectedItem] = useState<Item | null>(null)
 
@@ -23,42 +24,42 @@ export default function Chats() {
     title.toLowerCase().includes(search.trim().toLowerCase())
   )
 
-  const renderItems = (items: ItemType[]) => {
-    return items.map((item) => {
-      if (item.type === "project") return null;
+  console.log(selectedItem)
 
-      return (
-        <Fragment key={item.title}>
-          <button
-            type="button"
-            className={cn(
-              `-mx-1 flex w-full rounded-md px-2 py-2 text-left text-sm hover:bg-secondary/75`,
-              selectedItem?.title === item.title && "sm:bg-muted"
-            )}
-            onClick={() => {
-              setSelectedItem(item);
-            }}
-          >
-            <div className="flex gap-2">
-              <div>
-              <span className="col-start-2 row-span-2 font-medium">
-                {item.title}
-              </span>
-                <span className="col-start-2 row-span-2 row-start-2 line-clamp-2 text-ellipsis text-muted-foreground">
-                {item.title}
-              </span>
-              </div>
-            </div>
-          </button>
-          <Separator className="my-1" />
-          {item.items && item.items.length > 0 && (
-            <div className="ml-4">{renderItems(item.items)}</div>
+  const renderItems = (items: Item[]) => {
+    return items.map((item) => (
+      <Fragment key={item.title}>
+        <button
+          type="button"
+          className={cn(
+            `-mx-1 flex w-full rounded-md px-2 py-2 text-left text-sm hover:bg-secondary/75`,
+            selectedItem?.title === item.title && "sm:bg-muted"
           )}
-        </Fragment>
-      );
-    });
+          onClick={() => {
+            if (item.docsUrl !== null) {
+              setSelectedItem(item);
+            }
+          }}
+          disabled={item.docsUrl === null} // 선택 불가능하게 설정 가능
+        >
+          <div className="flex gap-2">
+            <div>
+            <span className="col-start-2 row-span-2 font-medium">
+              {item.title}
+            </span>
+              <span className="col-start-2 row-span-2 row-start-2 line-clamp-2 text-ellipsis text-muted-foreground">
+              {item.title}
+            </span>
+            </div>
+          </div>
+        </button>
+        <Separator className="my-1" />
+        {item.items && item.items.length > 0 && (
+          <div className="ml-4">{renderItems(item.items)}</div>
+        )}
+      </Fragment>
+    ));
   };
-
 
   return (
     <>
@@ -78,7 +79,7 @@ export default function Chats() {
             <div className='sticky top-0 z-10 -mx-4 bg-background px-4 pb-3 shadow-md sm:static sm:z-auto sm:mx-0 sm:p-0 sm:shadow-none'>
               <div className='flex items-center justify-between py-2'>
                 <div className='flex gap-2'>
-                  <h1 className='text-2xl font-bold'>Groups</h1>
+                  <h1 className='text-2xl font-bold'>All projects</h1>
                 </div>
               </div>
 
@@ -101,27 +102,13 @@ export default function Chats() {
 
           {/* Right Side */}
           {selectedItem ? (
-            <Table>
-              <TableCaption>A list of projects</TableCaption>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="w-[300px]">project name</TableHead>
-                  <TableHead className="text-right">service type</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {
-                  selectedItem.items.map((item: Item) => {
-                    return (
-                      <TableRow>
-                        <TableCell className="font-medium">{item.title}</TableCell>
-                        <TableCell className="text-right">server</TableCell>
-                      </TableRow>
-                    )
-                  })
-                }
-              </TableBody>
-            </Table>
+            <RedocStandalone
+              specUrl={selectedItem.docsUrl}
+              options={{
+                nativeScrollbars: true,
+                theme: { colors: { primary: { main: '#dd5522' } } },
+              }}
+            />
           ) : (
             <div
               className={cn(

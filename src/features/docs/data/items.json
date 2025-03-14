@@ -3,14 +3,17 @@
     {
       "title": "platform-architecture",
       "type": "group",
+      "docsUrl": null,
       "items": [
         {
           "title": "components",
           "type": "group",
+          "docsUrl": null,
           "items": [
             {
               "title": "ci-components",
               "type": "project",
+              "docsUrl": "https://gist.githubusercontent.com/lenage/08964335de9064540c8c335fb849c5da/raw/6d63e3546897356882ed7e30cd48891a24e2b354/feature.swagger.json",
               "items": []
             }
           ]
@@ -18,15 +21,18 @@
         {
           "title": "developer-portal",
           "type": "group",
+          "docsUrl": null,
           "items": [
             {
               "title": "backstage-frontend",
               "type": "project",
+              "docsUrl": "http://petstore.swagger.io/v2/swagger.json",
               "items": []
             },
             {
               "title": "backstage-backend",
               "type": "project",
+              "docsUrl": "http://petstore.swagger.io/v2/swagger.json",
               "items": []
             }
           ]
@@ -44,6 +50,7 @@
             {
               "title": "gitlab",
               "type": "project",
+              "docsUrl": "http://petstore.swagger.io/v2/swagger.json",
               "items": []
             }
           ]
@@ -55,11 +62,13 @@
             {
               "title": "system-platform",
               "type": "project",
+              "docsUrl": "http://petstore.swagger.io/v2/swagger.json",
               "items": []
             },
             {
               "title": "nobody",
               "type": "project",
+              "docsUrl": "http://petstore.swagger.io/v2/swagger.json",
               "items": []
             }
           ]
