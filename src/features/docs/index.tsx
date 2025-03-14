@@ -23,51 +23,37 @@ interface CollapsibleItemProps {
   renderItems: (items: Item[]) => React.ReactNode;
   selectedItem: Item | null;
   setSelectedItem: (item: Item) => void;
-  openAll: boolean; // 추가
+  isOpen: boolean;
+  toggleItem: (title: string) => void;
 }
 
 export function CollapsibleItem({
-                                  item,
-                                  renderItems,
-                                  selectedItem,
-                                  setSelectedItem,
-                                  openAll,
-                                }: CollapsibleItemProps) {
-  const [open, setOpen] = useState(false);
-
-  useEffect(() => {
-    setOpen(openAll);
-  }, [openAll]);
-
+  item,
+  renderItems,
+  selectedItem,
+  setSelectedItem,
+  isOpen,
+  toggleItem,
+}: CollapsibleItemProps) {
   const isGroup = item.type === 'group';
 
   if (isGroup) {
     return (
-      <Collapsible open={open} onOpenChange={setOpen}>
+      <Collapsible open={isOpen} onOpenChange={() => toggleItem(item.title)}>
         <CollapsibleTrigger asChild>
-          <button
-            type="button"
-            className={cn(
-              '-mx-1 flex w-full items-center justify-between rounded-md px-2 py-3 text-left text-sm'
-            )}
-          >
-            <div className="flex items-center gap-2 w-full">
-              <span className="font-medium">{item.title}</span>
-              <ChevronRight
-                className={cn(
-                  'h-4 w-4 ml-auto transition-transform duration-200',
-                  open && 'rotate-90'
-                )}
-              />
-            </div>
+          <button type="button" className="-mx-1 flex w-full items-center rounded-md px-2 py-3 text-left text-sm">
+            <span>{item.title}</span>
+            <ChevronRight
+              className={cn('ml-auto h-4 w-4 transition-transform', isOpen && 'rotate-90')}
+            />
           </button>
         </CollapsibleTrigger>
 
-        <CollapsibleContent>
-          <div className="ml-4">
-            {renderItems(item.items || [])}
-          </div>
-        </CollapsibleContent>
+        {isOpen && (
+          <CollapsibleContent>
+            <div className="ml-4">{renderItems(item.items || [])}</div>
+          </CollapsibleContent>
+        )}
       </Collapsible>
     );
   }
@@ -75,20 +61,14 @@ export function CollapsibleItem({
   return (
     <button
       type="button"
+      disabled={!item.docsUrl}
+      onClick={() => item.docsUrl && setSelectedItem(item)}
       className={cn(
         '-mx-1 flex w-full rounded-md px-2 py-3 text-left text-sm',
-        selectedItem?.title === item.title && 'sm:bg-muted'
+        selectedItem?.title === item.title && 'bg-muted'
       )}
-      onClick={() => {
-        if (item.docsUrl !== null) {
-          setSelectedItem(item);
-        }
-      }}
-      disabled={item.docsUrl === null}
     >
-      <div className="flex gap-2 w-full">
-        <span className="font-medium">{item.title}</span>
-      </div>
+      {item.title}
     </button>
   );
 }
@@ -96,29 +76,57 @@ export function CollapsibleItem({
 export default function Docs() {
   const [search, setSearch] = useState('');
   const [selectedItem, setSelectedItem] = useState<Item | null>(null);
-  const [openAll, setOpenAll] = useState<boolean>(false); // 추가
+  const [openItems, setOpenItems] = useState<Set<string>>(new Set());
 
+  // 전체 펼치기
+  const expandAll = () => {
+    const allTitles = new Set<string>();
+    const collectTitles = (items: Item[]) => {
+      items.forEach((item) => {
+        if (item.type === 'group') {
+          allTitles.add(item.title);
+          collectTitles(item.items || []);
+        }
+      });
+    };
+    collectTitles(items);
+    setOpenItems(allTitles);
+  };
+
+  // 전체 닫기
+  const collapseAll = () => setOpenItems(new Set());
+
+  // 개별 항목 열기/닫기 토글
+  const toggleItem = (title: string) => {
+    setOpenItems((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(title)) newSet.delete(title);
+      else newSet.add(title);
+      return newSet;
+    });
+  };
+
+  // 검색 필터링
   const filteredItems = items.filter(({ title }) =>
     title.toLowerCase().includes(search.trim().toLowerCase())
   );
 
-  const renderItems = (items: Item[]) => {
-    return items.map((item) => (
-      <Fragment key={item.title}>
-        <CollapsibleItem
-          item={item}
-          renderItems={renderItems}
-          selectedItem={selectedItem}
-          setSelectedItem={setSelectedItem}
-          openAll={openAll} // 추가
-        />
-      </Fragment>
+  // 렌더링 함수
+  const renderItems = (items: Item[]) =>
+    items.map((item) => (
+      <CollapsibleItem
+        key={item.title}
+        item={item}
+        renderItems={renderItems}
+        selectedItem={selectedItem}
+        setSelectedItem={setSelectedItem}
+        isOpen={openItems.has(item.title)}
+        toggleItem={toggleItem}
+      />
     ));
-  };
 
   return (
     <>
-      {/* ===== Top Heading ===== */}
       <Header>
         <Search />
         <div className="ml-auto flex items-center space-x-4">
@@ -133,64 +141,58 @@ export default function Docs() {
           <div className="flex w-full flex-col gap-2 sm:w-56 lg:w-72 2xl:w-80">
             <div className="sticky top-0 z-10 -mx-4 bg-background px-4 pb-3 shadow-md sm:static sm:z-auto sm:mx-0 sm:p-0 sm:shadow-none">
               <div className="flex items-center justify-between py-2">
+                <h1 className="text-xl font-bold">All projects</h1>
                 <div className="flex gap-2">
-                  <h1 className="text-2xl font-bold">All projects</h1>
-                </div>
-
-                {/* 전체 펼치기/닫기 버튼 추가 */}
-                <div className="flex gap-2">
+                  {/* Expand All Button */}
                   <button
-                    onClick={() => setOpenAll(true)}
-                    className="rounded bg-primary px-3 py-1 text-sm text-white"
+                    onClick={expandAll}
+                    className="rounded bg-blue-500 px-3 py-1 text-sm text-white hover:bg-blue-600"
                   >
                     Expand All
                   </button>
+
+                  {/* Collapse All Button */}
                   <button
-                    onClick={() => setOpenAll(false)}
-                    className="rounded bg-secondary px-3 py-1 text-sm text-white"
+                    onClick={collapseAll}
+                    className="rounded bg-gray-500 px-3 py-1 text-sm text-white hover:bg-gray-600"
                   >
                     Collapse All
                   </button>
                 </div>
               </div>
 
-              <label className="flex h-12 w-full items-center space-x-0 rounded-md border border-input pl-2 focus-within:outline-none focus-within:ring-1 focus-within:ring-ring">
+              <label className="flex h-12 w-full items-center rounded-md border border-input pl-2">
                 <IconSearch size={15} className="mr-2 stroke-slate-500" />
-                <span className="sr-only">Search</span>
                 <input
                   type="text"
-                  className="w-full flex-1 bg-inherit text-sm focus-visible:outline-none"
                   placeholder="Search chat..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
+                  className="w-full bg-transparent text-sm outline-none"
                 />
               </label>
             </div>
 
-            <ScrollArea className="-mx-3 h-full p-3">{renderItems(filteredItems)}</ScrollArea>;
+            <ScrollArea className="-mx-3 h-full p-3">{renderItems(filteredItems)}</ScrollArea>
           </div>
 
           {/* Right Side */}
           {selectedItem ? (
-            <RedocStandalone
-              specUrl={selectedItem.docsUrl}
-              options={{
-                nativeScrollbars: true,
-                theme: { colors: { primary: { main: '#dd5522' } } },
-              }}
-            />
+            // RedocStandalone with scrollable container
+            <div className="flex flex-col flex-1 overflow-y-auto">
+              <RedocStandalone
+                specUrl={selectedItem.docsUrl}
+                options={{
+                  nativeScrollbars: true,
+                  theme: { colors: { primary: { main: '#dd5522' } } },
+                }}
+              />
+            </div>
           ) : (
-            <div
-              className={cn(
-                'absolute inset-0 left-full z-50 hidden w-full flex-1 flex-col justify-center rounded-md border bg-primary-foreground shadow-sm transition-all duration-200 sm:static sm:z-auto sm:flex'
-              )}
-            >
-              <div className="flex flex-col items-center space-y-6">
-                <div className="space-y-2 text-center">
-                  <h1 className="text-xl font-semibold">API Docs use redoc</h1>
-                  <p className="text-sm text-gray-400">API Docs use redoc</p>
-                </div>
-              </div>
+            // Placeholder content with scrollable container
+            <div className="flex flex-col items-center justify-center flex-1 rounded-md border bg-primary-foreground shadow-sm overflow-y-auto">
+              <h1 className="text-xl font-semibold">API Docs use redoc</h1>
+              <p className="text-sm text-gray-400">API Docs use redoc</p>
             </div>
           )}
         </section>
@@ -198,3 +200,4 @@ export default function Docs() {
     </>
   );
 }
+

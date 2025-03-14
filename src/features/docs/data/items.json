@@ -74,6 +74,150 @@
           ]
         }
       ]
+    },
+    {
+      "title": "sre",
+      "type": "group",
+      "items": [
+        {
+          "title": "ci",
+          "type": "group",
+          "items": [
+            {
+              "title": "gitlab",
+              "type": "project",
+              "docsUrl": "http://petstore.swagger.io/v2/swagger.json",
+              "items": []
+            }
+          ]
+        },
+        {
+          "title": "cd",
+          "type": "group",
+          "items": [
+            {
+              "title": "system-platform",
+              "type": "project",
+              "docsUrl": "http://petstore.swagger.io/v2/swagger.json",
+              "items": []
+            },
+            {
+              "title": "nobody",
+              "type": "project",
+              "docsUrl": "http://petstore.swagger.io/v2/swagger.json",
+              "items": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "sre",
+      "type": "group",
+      "items": [
+        {
+          "title": "ci",
+          "type": "group",
+          "items": [
+            {
+              "title": "gitlab",
+              "type": "project",
+              "docsUrl": "http://petstore.swagger.io/v2/swagger.json",
+              "items": []
+            }
+          ]
+        },
+        {
+          "title": "cd",
+          "type": "group",
+          "items": [
+            {
+              "title": "system-platform",
+              "type": "project",
+              "docsUrl": "http://petstore.swagger.io/v2/swagger.json",
+              "items": []
+            },
+            {
+              "title": "nobody",
+              "type": "project",
+              "docsUrl": "http://petstore.swagger.io/v2/swagger.json",
+              "items": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "sre",
+      "type": "group",
+      "items": [
+        {
+          "title": "ci",
+          "type": "group",
+          "items": [
+            {
+              "title": "gitlab",
+              "type": "project",
+              "docsUrl": "http://petstore.swagger.io/v2/swagger.json",
+              "items": []
+            }
+          ]
+        },
+        {
+          "title": "cd",
+          "type": "group",
+          "items": [
+            {
+              "title": "system-platform",
+              "type": "project",
+              "docsUrl": "http://petstore.swagger.io/v2/swagger.json",
+              "items": []
+            },
+            {
+              "title": "nobody",
+              "type": "project",
+              "docsUrl": "http://petstore.swagger.io/v2/swagger.json",
+              "items": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "sre",
+      "type": "group",
+      "items": [
+        {
+          "title": "ci",
+          "type": "group",
+          "items": [
+            {
+              "title": "gitlab",
+              "type": "project",
+              "docsUrl": "http://petstore.swagger.io/v2/swagger.json",
+              "items": []
+            }
+          ]
+        },
+        {
+          "title": "cd",
+          "type": "group",
+          "items": [
+            {
+              "title": "system-platform",
+              "type": "project",
+              "docsUrl": "http://petstore.swagger.io/v2/swagger.json",
+              "items": []
+            },
+            {
+              "title": "nobody",
+              "type": "project",
+              "docsUrl": "http://petstore.swagger.io/v2/swagger.json",
+              "items": []
+            }
+          ]
+        }
+      ]
     }
   ]
 }
