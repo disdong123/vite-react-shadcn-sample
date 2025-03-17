@@ -21,7 +21,7 @@ export interface SubNavgroupItemType {
   id: number
   title: string
   type: string
-  docsUrl: string
+  docsUrl: string | null
   subItems: Array<SubNavgroupItemType>
 }
 
