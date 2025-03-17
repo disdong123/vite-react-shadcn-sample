@@ -16,7 +16,7 @@
               "id": 3,
               "title": "ci-components",
               "type": "project",
-              "docsUrl": "https://gist.githubusercontent.com/lenage/08964335de9064540c8c335fb849c5da/raw/6d63e3546897356882ed7e30cd48891a24e2b354/feature.swagger.json",
+              "docsUrl": "/html/redoc-static.html",
               "subItems": []
             },
             {

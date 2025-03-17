@@ -29,10 +29,12 @@ const Tree = React.memo(function Tree({
   item,
   setSelectedItem,
   selectedItem,
+  isRoot = false, // 최상위 부모인지 확인하는 플래그
 }: {
   item: SubNavgroupItemType
   setSelectedItem: (item: SubNavgroupItemType) => void
   selectedItem: SubNavgroupItemType | null
+  isRoot?: boolean // 기본값은 false
 }) {
   const { id, title, type, subItems = [] } = item // 구조 분해로 title, type, subItems 추출
   const isLeaf = subItems.length === 0 // 하위 아이템이 없는 경우 확인
@@ -61,7 +63,10 @@ const Tree = React.memo(function Tree({
   // 하위 아이템이 있는 경우 (폴더 렌더링)
   return (
     <SidebarMenuItem>
-      <Collapsible className='group/collapsible [&[data-state=open]>button>svg:first-child]:rotate-90'>
+      <Collapsible
+        className='group/collapsible [&[data-state=open]>button>svg:first-child]:rotate-90'
+        defaultOpen={isRoot} // 최상위 부모만 기본적으로 열림
+      >
         <CollapsibleTrigger asChild>
           <SidebarMenuButton>
             <ChevronRight className='transition-transform' />
@@ -70,13 +75,14 @@ const Tree = React.memo(function Tree({
           </SidebarMenuButton>
         </CollapsibleTrigger>
         <CollapsibleContent>
-          <SidebarMenuSub>
+          <SidebarMenuSub className='px-2.0 pl-2.5'>
             {subItems.map((subItem) => (
               <Tree
                 key={subItem.id}
                 item={subItem}
                 setSelectedItem={setSelectedItem}
                 selectedItem={selectedItem}
+                isRoot={false} // 하위 항목은 최상위가 아님
               />
             ))}
           </SidebarMenuSub>
@@ -106,7 +112,8 @@ export function SubNavGroup({
                 key={item.id}
                 item={item}
                 setSelectedItem={setSelectedItem}
-                selectedItem={selectedItem} // 선택된 항목 전달
+                selectedItem={selectedItem}
+                isRoot={true} // 최상위 부모임을 명시
               />
             ))}
           </SidebarMenu>

@@ -30,19 +30,9 @@ export const sidebarData: SidebarData = {
   },
   teams: [
     {
-      name: 'Shadcn Admin',
+      name: 'Kbank developer portal',
       logo: Command,
       plan: 'Vite + ShadcnUI',
-    },
-    {
-      name: 'Acme Inc',
-      logo: GalleryVerticalEnd,
-      plan: 'Enterprise',
-    },
-    {
-      name: 'Acme Corp.',
-      logo: AudioWaveform,
-      plan: 'Startup',
     },
   ],
   navGroups: [
@@ -58,7 +48,7 @@ export const sidebarData: SidebarData = {
           title: 'Docs',
           url: '/docs',
           icon: IconPackages,
-        }
+        },
       ],
     },
   ],

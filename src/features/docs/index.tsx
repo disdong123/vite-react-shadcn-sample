@@ -1,5 +1,4 @@
-import { useCallback, useState } from 'react'
-import { RedocStandalone } from 'redoc'
+import { useCallback, useEffect, useState } from 'react'
 import { Sidebar, SidebarContent } from '@/components/ui/sidebar.tsx'
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
@@ -16,9 +15,15 @@ export default function Docs() {
     null
   )
 
-  const handleSetSelected = useCallback((item: SubNavgroupItemType) => {
-    setSelectedItem(item)
-  }, [])
+  const handleSetSelected = useCallback(
+    (item: SubNavgroupItemType) => {
+      // 이전 상태와 비교하여 동일한 값이면 업데이트 방지
+      if (selectedItem?.id !== item.id) {
+        setSelectedItem(item)
+      }
+    },
+    [selectedItem] // 종속성 배열에 selectedItem 추가
+  )
 
   return (
     <>
@@ -37,7 +42,7 @@ export default function Docs() {
             collapsible='none'
             className='relative w-72 border-r bg-gray-100'
           >
-            <SidebarContent className='w-100'>
+            <SidebarContent>
               <SubNavGroup
                 items={items}
                 setSelectedItem={handleSetSelected}
@@ -47,16 +52,15 @@ export default function Docs() {
           </Sidebar>
 
           {/* Right Side */}
-          {selectedItem ? (
+          {/*https://raw.githubusercontent.com/disdong123/vite-react-shadcn-sample/blob/main/html/redoc-static.html*/}
+          {selectedItem?.docsUrl ? (
             // RedocStandalone with scrollable container
             <div className='flex flex-1 flex-col overflow-y-auto'>
-              <RedocStandalone
-                specUrl={selectedItem.docsUrl}
-                options={{
-                  nativeScrollbars: true,
-                  theme: { colors: { primary: { main: '#dd5522' } } },
-                }}
-              />
+              <iframe
+                src={selectedItem.docsUrl} // Redocly CLI로 생성된 HTML 파일 경로
+                className='h-full w-full border-none'
+                title='API Documentation'
+              ></iframe>
             </div>
           ) : (
             // Placeholder content with scrollable container
