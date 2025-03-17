@@ -1,17 +1,17 @@
-import { useEffect, useState } from 'react';
-import { Fragment } from 'react/jsx-runtime';
-import { RedocStandalone } from 'redoc';
-import { Sidebar, SidebarContent } from '@/components/ui/sidebar.tsx';
-import { Header } from '@/components/layout/header';
-import { Main } from '@/components/layout/main';
-import { ProfileDropdown } from '@/components/profile-dropdown';
-import { ThemeSwitch } from '@/components/theme-switch';
-import { SubNavgroupItemType, SubNavGroup } from '@/components/tree-nav-group.tsx'
-import { items } from './data/items.json';
-
+import { useState } from "react";
+import { RedocStandalone } from "redoc";
+import { Sidebar, SidebarContent } from "@/components/ui/sidebar.tsx";
+import { Header } from "@/components/layout/header";
+import { Main } from "@/components/layout/main";
+import { ProfileDropdown } from "@/components/profile-dropdown";
+import { ThemeSwitch } from "@/components/theme-switch";
+import { SubNavgroupItemType, SubNavGroup } from "@/components/tree-nav-group.tsx";
+import { items } from "./data/items.json";
 
 export default function Docs() {
-  const [selectedItem, setSelectedItem] = useState<SubNavgroupItemType | null>(null);
+  const [selectedItem, setSelectedItem] = useState<SubNavgroupItemType | null>(
+    null
+  );
 
   return (
     <>
@@ -25,13 +25,9 @@ export default function Docs() {
       <Main fixed>
         <section className="flex h-full gap-6">
           {/* Left Side */}
-          <Sidebar
-            side="left"
-            collapsible="none"
-            className="relative w-72 bg-gray-100 border-r"
-          >
+          <Sidebar side="left" collapsible="none" className="relative w-72 bg-gray-100 border-r">
             <SidebarContent className="w-100">
-              <SubNavGroup items={items} setSelectedItem={setSelectedItem} />
+              <SubNavGroup items={items} setSelectedItem={setSelectedItem} selectedItem={selectedItem} />
             </SidebarContent>
           </Sidebar>
 
@@ -43,7 +39,7 @@ export default function Docs() {
                 specUrl={selectedItem.docsUrl}
                 options={{
                   nativeScrollbars: true,
-                  theme: { colors: { primary: { main: '#dd5522' } } },
+                  theme: { colors: { primary: { main: "#dd5522" } } },
                 }}
               />
             </div>

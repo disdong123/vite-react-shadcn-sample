@@ -3,24 +3,42 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/component
 import { SidebarMenuItem, SidebarMenuButton, SidebarMenuSub } from '@/components/ui/sidebar';
 import { SidebarGroup, SidebarGroupLabel, SidebarGroupContent, SidebarMenu } from '@/components/ui/sidebar';
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resiable.tsx'
+import { useState } from 'react'
 
 export interface SubNavgroupItemType {
+  id: number
   title: string
   type: string
   docsUrl: string
-  items: Array<SubNavgroupItemType>
+  subItems: Array<SubNavgroupItemType>
 }
 
-function Tree({ item, setSelectedItem }: { item: SubNavgroupItemType; setSelectedItem: (item: SubNavgroupItemType) => void }) {
-  const { title, items = [] } = item; // 구조 분해로 title과 items 추출
-  const isLeaf = items.length === 0; // 하위 아이템이 없는 경우 확인
+function Tree({
+                item,
+                setSelectedItem,
+                selectedItem,
+              }: {
+  item: SubNavgroupItemType;
+  setSelectedItem: (item: SubNavgroupItemType) => void;
+  selectedItem: SubNavgroupItemType | null;
+}) {
+  const { id, title, type, subItems = [] } = item; // 구조 분해로 title, type, subItems 추출
+  const isLeaf = subItems.length === 0; // 하위 아이템이 없는 경우 확인
 
   // 하위 아이템이 없는 경우
   if (isLeaf) {
     return (
       <SidebarMenuButton
-        onClick={() => setSelectedItem(item)} // 클릭 시 선택된 항목 업데이트
-        className="data-[active=true]:bg-transparent"
+        onClick={() => {
+          if (type === "project") {
+            setSelectedItem(item); // 선택된 항목 업데이트
+          }
+        }}
+        className={`data-[active=true]:bg-transparent ${
+          selectedItem?.id === id && selectedItem?.type === "project"
+            ? "bg-blue-100 text-blue-600"
+            : ""
+        }`} // 선택된 항목에 하이라이트 추가
       >
         <File />
         {title}
@@ -33,7 +51,6 @@ function Tree({ item, setSelectedItem }: { item: SubNavgroupItemType; setSelecte
     <SidebarMenuItem>
       <Collapsible
         className="group/collapsible [&[data-state=open]>button>svg:first-child]:rotate-90"
-        // defaultOpen={title === "components" || title === "ui"} // 기본 열림 조건
       >
         <CollapsibleTrigger asChild>
           <SidebarMenuButton>
@@ -44,8 +61,13 @@ function Tree({ item, setSelectedItem }: { item: SubNavgroupItemType; setSelecte
         </CollapsibleTrigger>
         <CollapsibleContent>
           <SidebarMenuSub>
-            {items.map((subItem, index) => (
-              <Tree key={index} item={subItem} setSelectedItem={setSelectedItem} /> // 고유한 key 사용
+            {subItems.map((subItem) => (
+              <Tree
+                key={subItem.id}
+                item={subItem}
+                setSelectedItem={setSelectedItem}
+                selectedItem={selectedItem}
+              />
             ))}
           </SidebarMenuSub>
         </CollapsibleContent>
@@ -54,20 +76,33 @@ function Tree({ item, setSelectedItem }: { item: SubNavgroupItemType; setSelecte
   );
 }
 
-
-export function SubNavGroup({ items, setSelectedItem }: { items: Array<SubNavgroupItemType>; setSelectedItem: (item: SubNavgroupItemType) => void }) {
+export function SubNavGroup({
+                              items,
+                              setSelectedItem,
+                              selectedItem,
+                            }: {
+  items: Array<SubNavgroupItemType>;
+  setSelectedItem: (item: SubNavgroupItemType) => void;
+  selectedItem: SubNavgroupItemType | null;
+}) {
+  console.log(selectedItem)
   return (
     <>
-        <SidebarGroup>
-          <SidebarGroupLabel>Projects</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {items.map((item) => (
-                <Tree key={item.title} item={item} setSelectedItem={setSelectedItem} /> // 고유한 key 사용
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+      <SidebarGroup>
+        <SidebarGroupLabel>Projects</SidebarGroupLabel>
+        <SidebarGroupContent>
+          <SidebarMenu>
+            {items.map((item) => (
+              <Tree
+                key={item.id}
+                item={item}
+                setSelectedItem={setSelectedItem}
+                selectedItem={selectedItem} // 선택된 항목 전달
+              />
+            ))}
+          </SidebarMenu>
+        </SidebarGroupContent>
+      </SidebarGroup>
     </>
   );
 }
