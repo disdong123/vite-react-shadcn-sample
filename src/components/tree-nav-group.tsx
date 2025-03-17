@@ -17,12 +17,12 @@ import {
   SidebarMenu,
 } from '@/components/ui/sidebar'
 
-export interface SubNavgroupItemType {
+export interface TreeNavGroupItemType {
   id: number
   title: string
   type: string
   docsUrl: string | null
-  subItems: Array<SubNavgroupItemType>
+  subItems: Array<TreeNavGroupItemType>
 }
 
 const Tree = React.memo(function Tree({
@@ -31,9 +31,9 @@ const Tree = React.memo(function Tree({
   selectedItem,
   isRoot = false, // 최상위 부모인지 확인하는 플래그
 }: {
-  item: SubNavgroupItemType
-  setSelectedItem: (item: SubNavgroupItemType) => void
-  selectedItem: SubNavgroupItemType | null
+  item: TreeNavGroupItemType
+  setSelectedItem: (item: TreeNavGroupItemType) => void
+  selectedItem: TreeNavGroupItemType | null
   isRoot?: boolean // 기본값은 false
 }) {
   const { id, title, type, subItems = [] } = item // 구조 분해로 title, type, subItems 추출
@@ -97,9 +97,9 @@ export function SubNavGroup({
   setSelectedItem,
   selectedItem,
 }: {
-  items: Array<SubNavgroupItemType>
-  setSelectedItem: (item: SubNavgroupItemType) => void
-  selectedItem: SubNavgroupItemType | null
+  items: Array<TreeNavGroupItemType>
+  setSelectedItem: (item: TreeNavGroupItemType) => void
+  selectedItem: TreeNavGroupItemType | null
 }) {
   return (
     <>

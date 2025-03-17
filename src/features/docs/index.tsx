@@ -5,15 +5,15 @@ import { Main } from '@/components/layout/main'
 import { ProfileDropdown } from '@/components/profile-dropdown'
 import { ThemeSwitch } from '@/components/theme-switch'
 import {
-  SubNavgroupItemType,
+  TreeNavGroupItemType,
   SubNavGroup,
 } from '@/components/tree-nav-group.tsx'
 import { groups } from './data/gitlab-groups.json'
 
 export default function Docs() {
-  const gitlabGroups: SubNavgroupItemType[] = groups
+  const gitlabGroups: TreeNavGroupItemType[] = groups
   const [selectedGroup, setSelectedGroup] =
-    useState<SubNavgroupItemType | null>(null)
+    useState<TreeNavGroupItemType | null>(null)
 
   // 선택된 항목이 변경될 때 URL 업데이트
   useEffect(() => {
@@ -38,7 +38,7 @@ export default function Docs() {
 
   // 아이템 선택 핸들러
   const handleSetSelected = useCallback(
-    (group: SubNavgroupItemType) => {
+    (group: TreeNavGroupItemType) => {
       if (selectedGroup?.id !== group.id) {
         setSelectedGroup(group)
       }
@@ -56,7 +56,7 @@ export default function Docs() {
       </Header>
 
       <Main fixed>
-        <section className='flex h-full gap-6'>
+        <section className='flex h-full gap-3'>
           {/* 왼쪽 사이드바 */}
           <Sidebar
             side='left'
@@ -97,9 +97,9 @@ export default function Docs() {
 
 // Helper 함수: 트리 구조에서 ID에 해당하는 항목을 재귀적으로 찾기
 function findGroupById(
-  groups: Array<SubNavgroupItemType>,
+  groups: Array<TreeNavGroupItemType>,
   id: number
-): SubNavgroupItemType | null {
+): TreeNavGroupItemType | null {
   for (const group of groups) {
     if (group.id === id) return group // 현재 항목의 ID가 일치하면 반환
     if (group.subItems.length > 0) {
