@@ -2,15 +2,16 @@ import { ChevronRight, File, Folder } from 'lucide-react';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { SidebarMenuItem, SidebarMenuButton, SidebarMenuSub } from '@/components/ui/sidebar';
 import { SidebarGroup, SidebarGroupLabel, SidebarGroupContent, SidebarMenu } from '@/components/ui/sidebar';
+import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resiable.tsx'
 
-interface ItemType {
+export interface SubNavgroupItemType {
   title: string
   type: string
   docsUrl: string
-  items: Array<ItemType>
+  items: Array<SubNavgroupItemType>
 }
 
-function Tree({ item, setSelectedItem }: { item: ItemType; setSelectedItem: (item: ItemType) => void }) {
+function Tree({ item, setSelectedItem }: { item: SubNavgroupItemType; setSelectedItem: (item: SubNavgroupItemType) => void }) {
   const { title, items = [] } = item; // 구조 분해로 title과 items 추출
   const isLeaf = items.length === 0; // 하위 아이템이 없는 경우 확인
 
@@ -54,19 +55,19 @@ function Tree({ item, setSelectedItem }: { item: ItemType; setSelectedItem: (ite
 }
 
 
-export function SubNavGroup({ items, setSelectedItem }: { items: Array<ItemType>; setSelectedItem: (item: ItemType) => void }) {
+export function SubNavGroup({ items, setSelectedItem }: { items: Array<SubNavgroupItemType>; setSelectedItem: (item: SubNavgroupItemType) => void }) {
   return (
     <>
-      <SidebarGroup>
-        <SidebarGroupLabel>Projects</SidebarGroupLabel>
-        <SidebarGroupContent>
-          <SidebarMenu>
-            {items.map((item) => (
-              <Tree key={item.title} item={item} setSelectedItem={setSelectedItem} /> // 고유한 key 사용
-            ))}
-          </SidebarMenu>
-        </SidebarGroupContent>
-      </SidebarGroup>
+        <SidebarGroup>
+          <SidebarGroupLabel>Projects</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {items.map((item) => (
+                <Tree key={item.title} item={item} setSelectedItem={setSelectedItem} /> // 고유한 key 사용
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
     </>
   );
 }

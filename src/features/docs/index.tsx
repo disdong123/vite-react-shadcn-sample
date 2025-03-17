@@ -1,18 +1,17 @@
 import { useEffect, useState } from 'react';
 import { Fragment } from 'react/jsx-runtime';
 import { RedocStandalone } from 'redoc';
-import { SidebarContent } from '@/components/ui/sidebar.tsx';
+import { Sidebar, SidebarContent } from '@/components/ui/sidebar.tsx';
 import { Header } from '@/components/layout/header';
 import { Main } from '@/components/layout/main';
 import { ProfileDropdown } from '@/components/profile-dropdown';
 import { ThemeSwitch } from '@/components/theme-switch';
-import { type Item } from './data/item-types.ts'
+import { SubNavgroupItemType, SubNavGroup } from '@/components/tree-nav-group.tsx'
 import { items } from './data/items.json';
-import { SubNavGroup } from '@/components/tree-nav-group.tsx'
 
 
 export default function Docs() {
-  const [selectedItem, setSelectedItem] = useState<Item | null>(null);
+  const [selectedItem, setSelectedItem] = useState<SubNavgroupItemType | null>(null);
 
   return (
     <>
@@ -26,9 +25,15 @@ export default function Docs() {
       <Main fixed>
         <section className="flex h-full gap-6">
           {/* Left Side */}
-          <SidebarContent>
-            <SubNavGroup items={items} setSelectedItem={setSelectedItem} />
-          </SidebarContent>
+          <Sidebar
+            side="left"
+            collapsible="none"
+            className="relative w-72 bg-gray-100 border-r"
+          >
+            <SidebarContent className="w-100">
+              <SubNavGroup items={items} setSelectedItem={setSelectedItem} />
+            </SidebarContent>
+          </Sidebar>
 
           {/* Right Side */}
           {selectedItem ? (
