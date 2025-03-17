@@ -20,8 +20,8 @@ export const sidebarData: SidebarData = {
       title: 'General',
       items: [
         {
-          title: 'Overview',
-          url: '/overview',
+          title: 'Overviews',
+          url: '/overviews',
           icon: IconLayoutDashboard,
         },
         {

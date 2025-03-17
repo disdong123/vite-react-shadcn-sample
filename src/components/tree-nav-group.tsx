@@ -25,6 +25,7 @@ export interface TreeNavGroupItemType {
   subItems: Array<TreeNavGroupItemType>
 }
 
+// Tree 컴포넌트 (재귀적으로 트리 렌더링)
 const Tree = React.memo(function Tree({
   item,
   setSelectedItem,
@@ -34,12 +35,12 @@ const Tree = React.memo(function Tree({
   item: TreeNavGroupItemType
   setSelectedItem: (item: TreeNavGroupItemType) => void
   selectedItem: TreeNavGroupItemType | null
-  isRoot?: boolean // 기본값은 false
+  isRoot?: boolean
 }) {
-  const { id, title, type, subItems = [] } = item // 구조 분해로 title, type, subItems 추출
+  const { id, title, type, subItems } = item
   const isLeaf = subItems.length === 0 // 하위 아이템이 없는 경우 확인
 
-  // 하위 아이템이 없는 경우
+  // 하위 아이템이 없는 경우 (Leaf)
   if (isLeaf) {
     return (
       <SidebarMenuButton
@@ -49,10 +50,8 @@ const Tree = React.memo(function Tree({
           }
         }}
         className={`data-[active=true]:bg-transparent ${
-          selectedItem?.id === id && selectedItem?.type === 'project'
-            ? 'bg-blue-100 text-blue-600'
-            : ''
-        }`} // 선택된 항목에 하이라이트 추가
+          selectedItem?.id === id ? 'bg-blue-100 text-blue-600' : ''
+        }`}
       >
         <File />
         {title}
@@ -60,7 +59,7 @@ const Tree = React.memo(function Tree({
     )
   }
 
-  // 하위 아이템이 있는 경우 (폴더 렌더링)
+  // 하위 아이템이 있는 경우 (Folder 렌더링)
   return (
     <SidebarMenuItem>
       <Collapsible
@@ -92,6 +91,7 @@ const Tree = React.memo(function Tree({
   )
 })
 
+// SubNavGroup 컴포넌트 (최상위 트리 렌더링)
 export function SubNavGroup({
   items,
   setSelectedItem,
@@ -102,23 +102,21 @@ export function SubNavGroup({
   selectedItem: TreeNavGroupItemType | null
 }) {
   return (
-    <>
-      <SidebarGroup>
-        <SidebarGroupLabel>Projects</SidebarGroupLabel>
-        <SidebarGroupContent>
-          <SidebarMenu>
-            {items.map((item) => (
-              <Tree
-                key={item.id}
-                item={item}
-                setSelectedItem={setSelectedItem}
-                selectedItem={selectedItem}
-                isRoot={true} // 최상위 부모임을 명시
-              />
-            ))}
-          </SidebarMenu>
-        </SidebarGroupContent>
-      </SidebarGroup>
-    </>
+    <SidebarGroup>
+      <SidebarGroupLabel>Projects</SidebarGroupLabel>
+      <SidebarGroupContent>
+        <SidebarMenu>
+          {items.map((item) => (
+            <Tree
+              key={item.id}
+              item={item}
+              setSelectedItem={setSelectedItem}
+              selectedItem={selectedItem}
+              isRoot={true} // 최상위 부모임을 명시
+            />
+          ))}
+        </SidebarMenu>
+      </SidebarGroupContent>
+    </SidebarGroup>
   )
 }

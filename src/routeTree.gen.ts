@@ -23,8 +23,8 @@ const errors500LazyImport = createFileRoute('/(errors)/500')()
 const errors404LazyImport = createFileRoute('/(errors)/404')()
 const errors403LazyImport = createFileRoute('/(errors)/403')()
 const errors401LazyImport = createFileRoute('/(errors)/401')()
-const AuthenticatedOverviewIndexLazyImport = createFileRoute(
-  '/_authenticated/overview/',
+const AuthenticatedOverviewsIndexLazyImport = createFileRoute(
+  '/_authenticated/overviews/',
 )()
 const AuthenticatedDocsIndexLazyImport = createFileRoute(
   '/_authenticated/docs/',
@@ -83,13 +83,13 @@ const errors401LazyRoute = errors401LazyImport
   } as any)
   .lazy(() => import('./routes/(errors)/401.lazy').then((d) => d.Route))
 
-const AuthenticatedOverviewIndexLazyRoute =
-  AuthenticatedOverviewIndexLazyImport.update({
-    id: '/overview/',
-    path: '/overview/',
+const AuthenticatedOverviewsIndexLazyRoute =
+  AuthenticatedOverviewsIndexLazyImport.update({
+    id: '/overviews/',
+    path: '/overviews/',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any).lazy(() =>
-    import('./routes/_authenticated/overview/index.lazy').then((d) => d.Route),
+    import('./routes/_authenticated/overviews/index.lazy').then((d) => d.Route),
   )
 
 const AuthenticatedDocsIndexLazyRoute = AuthenticatedDocsIndexLazyImport.update(
@@ -162,11 +162,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDocsIndexLazyImport
       parentRoute: typeof AuthenticatedRouteImport
     }
-    '/_authenticated/overview/': {
-      id: '/_authenticated/overview/'
-      path: '/overview'
-      fullPath: '/overview'
-      preLoaderRoute: typeof AuthenticatedOverviewIndexLazyImport
+    '/_authenticated/overviews/': {
+      id: '/_authenticated/overviews/'
+      path: '/overviews'
+      fullPath: '/overviews'
+      preLoaderRoute: typeof AuthenticatedOverviewsIndexLazyImport
       parentRoute: typeof AuthenticatedRouteImport
     }
   }
@@ -177,13 +177,13 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
   AuthenticatedDocsIndexLazyRoute: typeof AuthenticatedDocsIndexLazyRoute
-  AuthenticatedOverviewIndexLazyRoute: typeof AuthenticatedOverviewIndexLazyRoute
+  AuthenticatedOverviewsIndexLazyRoute: typeof AuthenticatedOverviewsIndexLazyRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
   AuthenticatedDocsIndexLazyRoute: AuthenticatedDocsIndexLazyRoute,
-  AuthenticatedOverviewIndexLazyRoute: AuthenticatedOverviewIndexLazyRoute,
+  AuthenticatedOverviewsIndexLazyRoute: AuthenticatedOverviewsIndexLazyRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
@@ -198,7 +198,7 @@ export interface FileRoutesByFullPath {
   '/503': typeof errors503LazyRoute
   '/': typeof AuthenticatedIndexRoute
   '/docs': typeof AuthenticatedDocsIndexLazyRoute
-  '/overview': typeof AuthenticatedOverviewIndexLazyRoute
+  '/overviews': typeof AuthenticatedOverviewsIndexLazyRoute
 }
 
 export interface FileRoutesByTo {
@@ -209,7 +209,7 @@ export interface FileRoutesByTo {
   '/503': typeof errors503LazyRoute
   '/': typeof AuthenticatedIndexRoute
   '/docs': typeof AuthenticatedDocsIndexLazyRoute
-  '/overview': typeof AuthenticatedOverviewIndexLazyRoute
+  '/overviews': typeof AuthenticatedOverviewsIndexLazyRoute
 }
 
 export interface FileRoutesById {
@@ -222,7 +222,7 @@ export interface FileRoutesById {
   '/(errors)/503': typeof errors503LazyRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
   '/_authenticated/docs/': typeof AuthenticatedDocsIndexLazyRoute
-  '/_authenticated/overview/': typeof AuthenticatedOverviewIndexLazyRoute
+  '/_authenticated/overviews/': typeof AuthenticatedOverviewsIndexLazyRoute
 }
 
 export interface FileRouteTypes {
@@ -236,9 +236,9 @@ export interface FileRouteTypes {
     | '/503'
     | '/'
     | '/docs'
-    | '/overview'
+    | '/overviews'
   fileRoutesByTo: FileRoutesByTo
-  to: '/401' | '/403' | '/404' | '/500' | '/503' | '/' | '/docs' | '/overview'
+  to: '/401' | '/403' | '/404' | '/500' | '/503' | '/' | '/docs' | '/overviews'
   id:
     | '__root__'
     | '/_authenticated'
@@ -249,7 +249,7 @@ export interface FileRouteTypes {
     | '/(errors)/503'
     | '/_authenticated/'
     | '/_authenticated/docs/'
-    | '/_authenticated/overview/'
+    | '/_authenticated/overviews/'
   fileRoutesById: FileRoutesById
 }
 
@@ -294,7 +294,7 @@ export const routeTree = rootRoute
       "children": [
         "/_authenticated/",
         "/_authenticated/docs/",
-        "/_authenticated/overview/"
+        "/_authenticated/overviews/"
       ]
     },
     "/(errors)/401": {
@@ -320,8 +320,8 @@ export const routeTree = rootRoute
       "filePath": "_authenticated/docs/index.lazy.tsx",
       "parent": "/_authenticated"
     },
-    "/_authenticated/overview/": {
-      "filePath": "_authenticated/overview/index.lazy.tsx",
+    "/_authenticated/overviews/": {
+      "filePath": "_authenticated/overviews/index.lazy.tsx",
       "parent": "/_authenticated"
     }
   }
