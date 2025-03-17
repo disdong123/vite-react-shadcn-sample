@@ -1,40 +1,22 @@
 import { useEffect, useState } from 'react';
 import { Fragment } from 'react/jsx-runtime';
-import { IconSearch } from '@tabler/icons-react';
-import { ChevronRight } from 'lucide-react';
 import { RedocStandalone } from 'redoc';
-import { cn } from '@/lib/utils';
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible.tsx';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { SidebarContent } from '@/components/ui/sidebar.tsx';
 import { Header } from '@/components/layout/header';
 import { Main } from '@/components/layout/main';
 import { ProfileDropdown } from '@/components/profile-dropdown';
-import { Search } from '@/components/search';
 import { ThemeSwitch } from '@/components/theme-switch';
 import { type Item } from './data/item-types.ts'
 import { items } from './data/items.json';
 import { SubNavGroup } from '@/components/tree-nav-group.tsx'
 
 
-interface CollapsibleItemProps {
-  item: Item;
-  renderItems: (items: Item[]) => React.ReactNode;
-  selectedItem: Item | null;
-  setSelectedItem: (item: Item) => void;
-  isOpen: boolean;
-  toggleItem: (title: string) => void;
-}
-
 export default function Docs() {
-  const [search, setSearch] = useState('');
   const [selectedItem, setSelectedItem] = useState<Item | null>(null);
-  const [openItems, setOpenItems] = useState<Set<string>>(new Set());
 
   return (
     <>
       <Header>
-        <Search />
         <div className="ml-auto flex items-center space-x-4">
           <ThemeSwitch />
           <ProfileDropdown />

@@ -15,6 +15,12 @@
               "type": "project",
               "docsUrl": "https://gist.githubusercontent.com/lenage/08964335de9064540c8c335fb849c5da/raw/6d63e3546897356882ed7e30cd48891a24e2b354/feature.swagger.json",
               "items": []
+            },
+            {
+              "title": "build-tools",
+              "type": "project",
+              "docsUrl": null,
+              "items": []
             }
           ]
         },
@@ -24,15 +30,15 @@
           "docsUrl": null,
           "items": [
             {
-              "title": "backstage-frontend",
+              "title": "frontend-services",
               "type": "project",
               "docsUrl": "http://petstore.swagger.io/v2/swagger.json",
               "items": []
             },
             {
-              "title": "backstage-backend",
+              "title": "backend-services",
               "type": "project",
-              "docsUrl": "http://petstore.swagger.io/v2/swagger.json",
+              "docsUrl": null,
               "items": []
             }
           ]
@@ -42,177 +48,42 @@
     {
       "title": "sre",
       "type": "group",
+      "docsUrl": null,
       "items": [
         {
-          "title": "ci",
+          "title": "ci-pipelines",
           "type": "group",
+          "docsUrl": null,
           "items": [
             {
-              "title": "gitlab",
-              "type": "project",
-              "docsUrl": "http://petstore.swagger.io/v2/swagger.json",
-              "items": []
-            }
-          ]
-        },
-        {
-          "title": "cd",
-          "type": "group",
-          "items": [
-            {
-              "title": "system-platform",
+              "title": "gitlab-integration",
               "type": "project",
               "docsUrl": "http://petstore.swagger.io/v2/swagger.json",
               "items": []
             },
             {
-              "title": "nobody",
+              "title": "jenkins-integration",
               "type": "project",
-              "docsUrl": "http://petstore.swagger.io/v2/swagger.json",
-              "items": []
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "title": "sre",
-      "type": "group",
-      "items": [
-        {
-          "title": "ci",
-          "type": "group",
-          "items": [
-            {
-              "title": "gitlab",
-              "type": "project",
-              "docsUrl": "http://petstore.swagger.io/v2/swagger.json",
+              "docsUrl": null,
               "items": []
             }
           ]
         },
         {
-          "title": "cd",
+          "title": "cd-pipelines",
           "type": "group",
+          "docsUrl": null,
           "items": [
             {
-              "title": "system-platform",
+              "title": "deployment-tools",
               "type": "project",
-              "docsUrl": "http://petstore.swagger.io/v2/swagger.json",
+              "docsUrl": null,
               "items": []
             },
             {
-              "title": "nobody",
+              "title": "monitoring-services",
               "type": "project",
-              "docsUrl": "http://petstore.swagger.io/v2/swagger.json",
-              "items": []
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "title": "sre",
-      "type": "group",
-      "items": [
-        {
-          "title": "ci",
-          "type": "group",
-          "items": [
-            {
-              "title": "gitlab",
-              "type": "project",
-              "docsUrl": "http://petstore.swagger.io/v2/swagger.json",
-              "items": []
-            }
-          ]
-        },
-        {
-          "title": "cd",
-          "type": "group",
-          "items": [
-            {
-              "title": "system-platform",
-              "type": "project",
-              "docsUrl": "http://petstore.swagger.io/v2/swagger.json",
-              "items": []
-            },
-            {
-              "title": "nobody",
-              "type": "project",
-              "docsUrl": "http://petstore.swagger.io/v2/swagger.json",
-              "items": []
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "title": "sre",
-      "type": "group",
-      "items": [
-        {
-          "title": "ci",
-          "type": "group",
-          "items": [
-            {
-              "title": "gitlab",
-              "type": "project",
-              "docsUrl": "http://petstore.swagger.io/v2/swagger.json",
-              "items": []
-            }
-          ]
-        },
-        {
-          "title": "cd",
-          "type": "group",
-          "items": [
-            {
-              "title": "system-platform",
-              "type": "project",
-              "docsUrl": "http://petstore.swagger.io/v2/swagger.json",
-              "items": []
-            },
-            {
-              "title": "nobody",
-              "type": "project",
-              "docsUrl": "http://petstore.swagger.io/v2/swagger.json",
-              "items": []
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "title": "sre",
-      "type": "group",
-      "items": [
-        {
-          "title": "ci",
-          "type": "group",
-          "items": [
-            {
-              "title": "gitlab",
-              "type": "project",
-              "docsUrl": "http://petstore.swagger.io/v2/swagger.json",
-              "items": []
-            }
-          ]
-        },
-        {
-          "title": "cd",
-          "type": "group",
-          "items": [
-            {
-              "title": "system-platform",
-              "type": "project",
-              "docsUrl": "http://petstore.swagger.io/v2/swagger.json",
-              "items": []
-            },
-            {
-              "title": "nobody",
-              "type": "project",
-              "docsUrl": "http://petstore.swagger.io/v2/swagger.json",
+              "docsUrl": "https://gist.githubusercontent.com/lenage/08964335de9064540c8c335fb849c5da/raw/6d63e3546897356882ed7e30cd48891a24e2b354/feature.swagger.json",
               "items": []
             }
           ]
@@ -220,4 +91,4 @@
       ]
     }
   ]
-}
+  }

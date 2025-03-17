@@ -10,51 +10,63 @@ interface ItemType {
   items: Array<ItemType>
 }
 
-export function Tree({ item, setSelectedItem }: { item: ItemType, setSelectedItem: (item: ItemType) => void }) {
-  if (item.items.length === 0) {
+function Tree({ item, setSelectedItem }: { item: ItemType; setSelectedItem: (item: ItemType) => void }) {
+  const { title, items = [] } = item; // 구조 분해로 title과 items 추출
+  const isLeaf = items.length === 0; // 하위 아이템이 없는 경우 확인
+
+  // 하위 아이템이 없는 경우
+  if (isLeaf) {
     return (
-      <SidebarMenuButton onClick={() => setSelectedItem(item)}>
-        <Folder />
-        {item.title}
+      <SidebarMenuButton
+        onClick={() => setSelectedItem(item)} // 클릭 시 선택된 항목 업데이트
+        className="data-[active=true]:bg-transparent"
+      >
+        <File />
+        {title}
       </SidebarMenuButton>
-    )
+    );
   }
 
-  // 폴더 렌더링 (재귀 호출)
+  // 하위 아이템이 있는 경우 (폴더 렌더링)
   return (
     <SidebarMenuItem>
-      <Collapsible className='group/collapsible'>
+      <Collapsible
+        className="group/collapsible [&[data-state=open]>button>svg:first-child]:rotate-90"
+        // defaultOpen={title === "components" || title === "ui"} // 기본 열림 조건
+      >
         <CollapsibleTrigger asChild>
           <SidebarMenuButton>
-            <ChevronRight className='transition-transform' />
-            {item.title}
+            <ChevronRight className="transition-transform" />
+            <Folder />
+            {title}
           </SidebarMenuButton>
         </CollapsibleTrigger>
         <CollapsibleContent>
           <SidebarMenuSub>
-            {item.items.map((item, index) => {
-              return <Tree key={index} item={item} setSelectedItem={setSelectedItem} />
-            })}
+            {items.map((subItem, index) => (
+              <Tree key={index} item={subItem} setSelectedItem={setSelectedItem} /> // 고유한 key 사용
+            ))}
           </SidebarMenuSub>
         </CollapsibleContent>
       </Collapsible>
     </SidebarMenuItem>
-  )
+  );
 }
 
-export function SubNavGroup({ items, setSelectedItem }: { items: Array<ItemType>, setSelectedItem: (item: ItemType) => void }) {
+
+export function SubNavGroup({ items, setSelectedItem }: { items: Array<ItemType>; setSelectedItem: (item: ItemType) => void }) {
   return (
     <>
       <SidebarGroup>
         <SidebarGroupLabel>Projects</SidebarGroupLabel>
         <SidebarGroupContent>
           <SidebarMenu>
-            {items.map((item, itemIndex) => (
-              <Tree key={itemIndex} item={item} setSelectedItem={setSelectedItem} />
+            {items.map((item) => (
+              <Tree key={item.title} item={item} setSelectedItem={setSelectedItem} /> // 고유한 key 사용
             ))}
           </SidebarMenu>
         </SidebarGroupContent>
       </SidebarGroup>
     </>
-  )
+  );
 }
