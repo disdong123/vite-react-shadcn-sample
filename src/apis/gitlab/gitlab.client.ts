@@ -1,27 +1,75 @@
 import { DocsType } from './types/docs.type'
 
-class GitlabClient {
-  constructor() {}
+class ProjectClient {
+  getProjects() {
+    return {
+      projects: [
+        {
+          id: 1,
+          title: 'platform-architecture',
+          type: 'group',
+          docsUrl: null,
+          subItems: [
+            {
+              id: 2,
+              title: 'components',
+              type: 'group',
+              docsUrl: null,
+              subItems: [
+                {
+                  id: 3,
+                  title: 'ci-components',
+                  type: 'project',
+                  docsUrl: '/html/redoc-static.html',
+                  subItems: [],
+                },
+                {
+                  id: 4,
+                  title: 'build-tools',
+                  type: 'project',
+                  docsUrl: null,
+                  subItems: [],
+                },
+              ],
+            },
+            {
+              id: 5,
+              title: 'developer-portal',
+              type: 'group',
+              docsUrl: null,
+              subItems: [
+                {
+                  id: 6,
+                  title: 'frontend-services',
+                  type: 'project',
+                  docsUrl: 'http://petstore.swagger.io/v2/swagger.json',
+                  subItems: [],
+                },
+                {
+                  id: 7,
+                  title: 'backend-services',
+                  type: 'project',
+                  docsUrl: null,
+                  subItems: [],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    }.projects
+  }
 
-  /**
-   * TODO remove
-   */
-  empty() {}
+  getProjectOverview(id: number) {
+    return this.getProjects().filter((p) => p.id === id)
+  }
 }
 
 class DocsClient {
-  private readonly client: GitlabClient
-
-  constructor(client: GitlabClient) {
-    this.client = client
-  }
-
   /**
    * TODO 실제 api response 로 docsType 변경 필요. DocsType -> TreeNavGroupItemType 매핑 필요
    */
   getDocs(): Array<DocsType> {
-    this.client.empty()
-
     return {
       docs: [
         {
@@ -307,5 +355,5 @@ class DocsClient {
   }
 }
 
-const gitlabClient = new GitlabClient()
-export const docsClient = new DocsClient(gitlabClient)
+export const docsClient = new DocsClient()
+export const projectClient = new ProjectClient()

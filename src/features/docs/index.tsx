@@ -74,7 +74,7 @@ export default function Docs() {
           <PanelResizeHandle className='w-1 bg-gray-300 hover:bg-gray-400' />
 
           {/* 오른쪽 컨텐츠 패널 */}
-          <Panel>
+          <Panel className={'ml-1'}>
             {selectedDoc?.docsUrl ? (
               <div className='flex h-full flex-col overflow-y-auto'>
                 <iframe
