@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { docsClient } from '@/apis/gitlab/gitlab.client.ts'
 import { Sidebar, SidebarContent } from '@/components/ui/sidebar.tsx'
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
@@ -8,28 +9,29 @@ import {
   TreeNavGroupItemType,
   SubNavGroup,
 } from '@/components/tree-nav-group.tsx'
-import { groups } from './data/gitlab-groups.json'
+import { DocsUtil } from './utils/docs.util'
 
-// Docs 페이지 컴포넌트
 export default function Docs() {
-  const [selectedGroup, setSelectedGroup] =
-    useState<TreeNavGroupItemType | null>(null)
+  const docs = docsClient.getDocs()
+  const [selectedDoc, setSelectedDoc] = useState<TreeNavGroupItemType | null>(
+    null
+  )
 
-  // URL 업데이트 효과
+  // 문서가 선택될 때 url 업데이트
   useEffect(() => {
-    if (selectedGroup) {
-      const newUrl = `/docs?groupId=${selectedGroup.id}`
+    if (selectedDoc) {
+      const newUrl = `/docs?docId=${selectedDoc.id}`
       window.history.pushState({}, '', newUrl)
     }
-  }, [selectedGroup])
+  }, [selectedDoc])
 
-  // URL에서 상태 초기화 효과
+  // 컴포넌트가 최초 마운트 되는 경우 docId 가 있으면 해당 문서로 라우팅
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search)
-    const groupId = searchParams.get('groupId')
-    if (groupId) {
-      const foundGroup = findGroupById(groups, parseInt(groupId))
-      if (foundGroup) setSelectedGroup(foundGroup)
+    const docId = searchParams.get('docId')
+    if (docId) {
+      const foundDoc = DocsUtil.findDocById(docs, parseInt(docId))
+      if (foundDoc) setSelectedDoc(foundDoc)
     }
   }, [])
 
@@ -43,7 +45,7 @@ export default function Docs() {
       </Header>
 
       <Main fixed>
-        <section className='flex h-full gap-2'>
+        <section className='flex h-full gap-1'>
           {/* 왼쪽 사이드바 */}
           <Sidebar
             side='left'
@@ -52,18 +54,18 @@ export default function Docs() {
           >
             <SidebarContent>
               <SubNavGroup
-                items={groups}
-                setSelectedItem={setSelectedGroup}
-                selectedItem={selectedGroup}
+                items={docs}
+                setSelectedItem={setSelectedDoc}
+                selectedItem={selectedDoc}
               />
             </SidebarContent>
           </Sidebar>
 
-          {/* 오른쪽 콘텐츠 */}
-          {selectedGroup?.docsUrl ? (
+          {/* 오른쪽 컨텐츠 */}
+          {selectedDoc?.docsUrl ? (
             <div className='flex flex-1 flex-col overflow-y-auto'>
               <iframe
-                src={selectedGroup.docsUrl}
+                src={selectedDoc.docsUrl}
                 className='h-full w-full border-none'
                 title='API Documentation'
               ></iframe>
@@ -78,19 +80,4 @@ export default function Docs() {
       </Main>
     </>
   )
-}
-
-// Helper 함수: 트리 구조에서 ID에 해당하는 항목을 재귀적으로 찾기
-function findGroupById(
-  groups: Array<TreeNavGroupItemType>,
-  id: number
-): TreeNavGroupItemType | null {
-  for (const group of groups) {
-    if (group.id === id) return group // 현재 항목의 ID가 일치하면 반환
-    if (group.subItems.length > 0) {
-      const found = findGroupById(group.subItems, id) // 하위 항목에서 검색 수행
-      if (found) return found // 하위 항목에서 찾으면 반환
-    }
-  }
-  return null // 일치하는 항목이 없으면 null 반환
 }
