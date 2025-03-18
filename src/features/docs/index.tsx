@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { docsClient } from '@/apis/gitlab/gitlab.client.ts'
+import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels'
 import { Sidebar, SidebarContent } from '@/components/ui/sidebar.tsx'
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
@@ -45,38 +46,46 @@ export default function Docs() {
       </Header>
 
       <Main fixed>
-        <section className='flex h-full gap-1'>
-          {/* 왼쪽 사이드바 */}
-          <Sidebar
-            side='left'
-            collapsible='none'
-            className='w-72 border-r bg-gray-100'
-          >
-            <SidebarContent>
-              <SubNavGroup
-                items={docs}
-                setSelectedItem={setSelectedDoc}
-                selectedItem={selectedDoc}
-              />
-            </SidebarContent>
-          </Sidebar>
+        {/* Resizable Panel Group */}
+        <PanelGroup direction='horizontal' className='h-full w-full'>
+          {/* 왼쪽 사이드바 패널 */}
+          <Panel defaultSize={13} minSize={5} maxSize={40}>
+            <Sidebar
+              side='left'
+              collapsible='none'
+              className='h-full w-full border-r bg-gray-100' // 다크모드 시 개선 필요
+            >
+              <SidebarContent className='h-full overflow-y-auto'>
+                <SubNavGroup
+                  items={docs}
+                  setSelectedItem={setSelectedDoc}
+                  selectedItem={selectedDoc}
+                />
+              </SidebarContent>
+            </Sidebar>
+          </Panel>
 
-          {/* 오른쪽 컨텐츠 */}
-          {selectedDoc?.docsUrl ? (
-            <div className='flex flex-1 flex-col overflow-y-auto'>
-              <iframe
-                src={selectedDoc.docsUrl}
-                className='h-full w-full border-none'
-                title='API Documentation'
-              ></iframe>
-            </div>
-          ) : (
-            <div className='flex flex-1 flex-col items-center justify-center overflow-y-auto rounded-md border bg-primary-foreground shadow-sm'>
-              <h1 className='text-xl font-semibold'>API Docs use redoc</h1>
-              <p className='text-sm text-gray-400'>API Docs use redoc</p>
-            </div>
-          )}
-        </section>
+          {/* 리사이즈 핸들 */}
+          <PanelResizeHandle className='w-1 bg-gray-300 hover:bg-gray-400' />
+
+          {/* 오른쪽 콘텐츠 패널 */}
+          <Panel>
+            {selectedDoc?.docsUrl ? (
+              <div className='flex h-full flex-col overflow-y-auto'>
+                <iframe
+                  src={selectedDoc.docsUrl}
+                  className='h-full w-full border-none'
+                  title='API Documentation'
+                ></iframe>
+              </div>
+            ) : (
+              <div className='flex h-full flex-col items-center justify-center overflow-y-auto rounded-md border bg-primary-foreground shadow-sm'>
+                <h1 className='text-xl font-semibold'>API Docs use redoc</h1>
+                <p className='text-sm text-gray-400'>API Docs use redoc</p>
+              </div>
+            )}
+          </Panel>
+        </PanelGroup>
       </Main>
     </>
   )
