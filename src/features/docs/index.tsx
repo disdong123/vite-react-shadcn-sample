@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { docsClient } from '@/apis/gitlab/gitlab.client.ts'
+import { DocsType } from '@/apis/gitlab/types/docs.type.ts'
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels'
 import { Sidebar, SidebarContent } from '@/components/ui/sidebar.tsx'
 import { Header } from '@/components/layout/header'
@@ -10,29 +11,33 @@ import {
   TreeNavGroupItemType,
   SubNavGroup,
 } from '@/components/tree-nav-group.tsx'
-import { DocsUtil } from './utils/docs.util'
+import { TreeNavGroupUtils } from '@/components/utils/tree-nav-group.utils.ts'
+import { DocsUtils } from '@/features/docs/utils/docs.utils.ts'
 
 export default function Docs() {
   const docs = docsClient.getDocs()
-  const [selectedDoc, setSelectedDoc] = useState<TreeNavGroupItemType | null>(
+  const [selectedItem, setSelectedItem] = useState<TreeNavGroupItemType | null>(
     null
   )
+  const [selectedDoc, setSelectedDoc] = useState<DocsType | null>(null)
 
-  // 문서가 선택될 때 url 업데이트
+  // item 이 선택될 때 문서 상태 변경 및 url 업데이트
   useEffect(() => {
-    if (selectedDoc) {
-      const newUrl = `/docs?docId=${selectedDoc.id}`
-      window.history.pushState({}, '', newUrl)
+    if (selectedItem) {
+      setSelectedDoc(DocsUtils.getDocById(selectedItem.id, docs))
+      window.history.pushState({}, '', `/docs?docId=${selectedItem.id}`)
     }
-  }, [selectedDoc])
+  }, [selectedItem])
 
   // 컴포넌트가 최초 마운트 되는 경우 docId 가 있으면 해당 문서로 라우팅
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search)
     const docId = searchParams.get('docId')
     if (docId) {
-      const foundDoc = DocsUtil.findDocById(docs, parseInt(docId))
-      if (foundDoc) setSelectedDoc(foundDoc)
+      const selectedItem = TreeNavGroupUtils.getItemById(parseInt(docId), docs)
+      if (selectedItem) {
+        setSelectedItem(selectedItem)
+      }
     }
   }, [])
 
@@ -58,8 +63,8 @@ export default function Docs() {
               <SidebarContent className='h-full overflow-y-auto'>
                 <SubNavGroup
                   items={docs}
-                  setSelectedItem={setSelectedDoc}
-                  selectedItem={selectedDoc}
+                  setSelectedItem={setSelectedItem}
+                  selectedItem={selectedItem}
                 />
               </SidebarContent>
             </Sidebar>
@@ -68,7 +73,7 @@ export default function Docs() {
           {/* 리사이즈 핸들 */}
           <PanelResizeHandle className='w-1 bg-gray-300 hover:bg-gray-400' />
 
-          {/* 오른쪽 콘텐츠 패널 */}
+          {/* 오른쪽 컨텐츠 패널 */}
           <Panel>
             {selectedDoc?.docsUrl ? (
               <div className='flex h-full flex-col overflow-y-auto'>

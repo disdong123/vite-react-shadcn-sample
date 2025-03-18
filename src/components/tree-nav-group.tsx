@@ -20,8 +20,6 @@ import {
 export interface TreeNavGroupItemType {
   id: number
   title: string
-  type: string
-  docsUrl: string | null
   subItems: Array<TreeNavGroupItemType>
 }
 
@@ -37,7 +35,7 @@ const Tree = React.memo(function Tree({
   selectedItem: TreeNavGroupItemType | null
   isRoot?: boolean
 }) {
-  const { id, title, type, subItems } = item
+  const { id, title, subItems } = item
   const isLeaf = subItems.length === 0 // 하위 아이템이 없는 경우 확인
 
   // 하위 아이템이 없는 경우 (Leaf)
@@ -45,9 +43,7 @@ const Tree = React.memo(function Tree({
     return (
       <SidebarMenuButton
         onClick={() => {
-          if (type === 'project') {
-            setSelectedItem(item) // 선택된 항목 업데이트
-          }
+          setSelectedItem(item) // 선택된 항목 업데이트
         }}
         className={`data-[active=true]:bg-transparent ${
           selectedItem?.id === id ? 'bg-blue-100 text-blue-600' : ''
