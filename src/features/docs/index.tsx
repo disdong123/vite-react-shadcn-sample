@@ -1,3 +1,4 @@
+// Docs.tsx (Parent Component)
 import { useEffect, useState } from 'react'
 import { docsClient } from '@/apis/gitlab/gitlab.client.ts'
 import { DocsType } from '@/apis/gitlab/types/docs.type.ts'
@@ -14,7 +15,8 @@ import { ThemeSwitch } from '@/components/theme-switch'
 import {
   TreeNavGroupItemType,
   SubNavGroup,
-} from '@/components/tree-nav-group.tsx'
+  CollapseStateProvider,
+} from '@/components/tree-nav-group'
 import { TreeNavGroupUtils } from '@/components/utils/tree-nav-group.utils.ts'
 import { DocsUtils } from '@/features/docs/utils/docs.utils.ts'
 
@@ -24,9 +26,8 @@ export default function Docs() {
     null
   )
   const [selectedDoc, setSelectedDoc] = useState<DocsType | null>(null)
-  const [isCollapsed, setIsCollapsed] = useState(false) // 사이드바 축소 상태 관리
+  const [isCollapsed, setIsCollapsed] = useState(false)
 
-  // item 이 선택될 때 문서 상태 변경 및 url 업데이트
   useEffect(() => {
     if (selectedItem) {
       setSelectedDoc(DocsUtils.getDocById(selectedItem.id, docs))
@@ -34,25 +35,24 @@ export default function Docs() {
     }
   }, [selectedItem])
 
-  // 컴포넌트가 최초 마운트 되는 경우 id 가 있으면 해당 문서로 라우팅
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search)
     const docId = searchParams.get('id')
     if (docId) {
-      const selectedItem = TreeNavGroupUtils.getItemById(parseInt(docId), docs)
-      if (selectedItem) {
-        setSelectedItem(selectedItem)
+      const foundItem = TreeNavGroupUtils.getItemById(parseInt(docId), docs)
+      if (foundItem) {
+        setSelectedItem(foundItem)
       }
     }
   }, [])
 
-  // 사이드바 토글 핸들러
   const toggleSidebar = () => {
     setIsCollapsed(!isCollapsed)
   }
 
   return (
-    <>
+    // Wrap your sidebar and sub-tree in the provider so that all collapse states persist.
+    <CollapseStateProvider>
       <Header>
         <div className='ml-auto flex items-center space-x-4'>
           <ThemeSwitch />
@@ -62,19 +62,14 @@ export default function Docs() {
 
       <Main fixed>
         <div className='flex h-full w-full'>
-          {/* 왼쪽 사이드바 */}
+          {/* Sidebar */}
           <Sidebar
             side='left'
             collapsible='none'
-            className={`h-full border-r bg-gray-100 transition-all duration-300 ${
-              isCollapsed ? 'w-12' : 'w-64'
-            }`}
+            className={`h-full border-r bg-gray-100 transition-all duration-300 ${isCollapsed ? 'w-12' : 'w-88'}`}
           >
-            {/* Sidebar Header */}
-            <SidebarHeader className=''>
-              {/* 토글 버튼 */}
+            <SidebarHeader>
               <div className='ml-2 mt-2 flex justify-between'>
-                {/* Projects 텍스트 */}
                 {!isCollapsed && (
                   <span className='text-sm font-medium text-gray-600'>
                     Docs
@@ -89,8 +84,6 @@ export default function Docs() {
                 </button>
               </div>
             </SidebarHeader>
-
-            {/* Sidebar Content */}
             {!isCollapsed && (
               <SidebarContent className='h-full overflow-y-auto'>
                 <SubNavGroup
@@ -102,7 +95,7 @@ export default function Docs() {
             )}
           </Sidebar>
 
-          {/* 오른쪽 컨텐츠 */}
+          {/* Main Content */}
           <div
             className={`ml-1 flex-1 ${isCollapsed ? 'w-[calc(100%-4rem)]' : 'w-[calc(100%-16rem)]'}`}
           >
@@ -123,6 +116,6 @@ export default function Docs() {
           </div>
         </div>
       </Main>
-    </>
+    </CollapseStateProvider>
   )
 }

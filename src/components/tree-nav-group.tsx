@@ -1,4 +1,6 @@
+// Tree.tsx (used in SubNavGroup)
 import React from 'react'
+import { createContext, useState, useContext } from 'react'
 import { ChevronRight, File, Folder } from 'lucide-react'
 import {
   Collapsible,
@@ -12,10 +14,51 @@ import {
 } from '@/components/ui/sidebar'
 import {
   SidebarGroup,
-  SidebarGroupLabel,
   SidebarGroupContent,
   SidebarMenu,
 } from '@/components/ui/sidebar'
+
+interface CollapseStates {
+  [key: number]: boolean
+}
+
+interface CollapseStateContextProps {
+  collapseStates: CollapseStates
+  setCollapseState: (id: number, isOpen: boolean) => void
+}
+
+// Create a context to hold the collapse state mapping.
+const CollapseStateContext = createContext<
+  CollapseStateContextProps | undefined
+>(undefined)
+
+export const CollapseStateProvider = ({
+  children,
+}: {
+  children: React.ReactNode
+}) => {
+  const [collapseStates, setCollapseStates] = useState<CollapseStates>({})
+
+  const setCollapseState = (id: number, isOpen: boolean) => {
+    setCollapseStates((prev) => ({ ...prev, [id]: isOpen }))
+  }
+
+  return (
+    <CollapseStateContext.Provider value={{ collapseStates, setCollapseState }}>
+      {children}
+    </CollapseStateContext.Provider>
+  )
+}
+
+export const useCollapseState = () => {
+  const context = useContext(CollapseStateContext)
+  if (!context) {
+    throw new Error(
+      'useCollapseState must be used within a CollapseStateProvider'
+    )
+  }
+  return context
+}
 
 export interface TreeNavGroupItemType {
   id: number
@@ -23,58 +66,71 @@ export interface TreeNavGroupItemType {
   subItems: Array<TreeNavGroupItemType>
 }
 
-// Tree 컴포넌트 (재귀적으로 트리 렌더링)
-const Tree = React.memo(function Tree({
-  item,
-  setSelectedItem,
-  selectedItem,
-  isRoot = false, // 최상위 부모인지 확인하는 플래그
-}: {
+// Helper function to check recursively if an item or any descendant matches the URL param.
+const hasMatchingDescendant = (
+  item: TreeNavGroupItemType,
+  targetId: number | null
+): boolean => {
+  if (targetId === null) return false
+  if (item.id === targetId) return true
+  return item.subItems.some((subItem) =>
+    hasMatchingDescendant(subItem, targetId)
+  )
+}
+
+interface TreeProps {
   item: TreeNavGroupItemType
   setSelectedItem: (item: TreeNavGroupItemType) => void
   selectedItem: TreeNavGroupItemType | null
   isRoot?: boolean
-}) {
+}
+
+const Tree = React.memo(function Tree({
+  item,
+  setSelectedItem,
+  selectedItem,
+  isRoot = false,
+}: TreeProps) {
   const { id, title, subItems } = item
-  const isLeaf = subItems.length === 0 // 하위 아이템이 없는 경우 확인
+  const isLeaf = subItems.length === 0
 
-  // 편의상 이 컴포넌트를 이용할 경우 파라미터 이름을 id 로 지정합니다.
+  // Get the target id from the URL.
   const searchParams = new URLSearchParams(window.location.search)
-  const paramId = searchParams.get('id')
+  const paramIdStr = searchParams.get('id')
+  const targetId = paramIdStr ? parseInt(paramIdStr) : null
 
-  // 하위 아이템이 없는 경우 (Leaf)
+  // Get collapse state from context.
+  const { collapseStates, setCollapseState } = useCollapseState()
+
+  // Determine the initial open state:
+  // If the collapse state is already stored, use that; otherwise, if the item is root
+  // or if any descendant (at any level) matches the target id, default open.
+  const initialOpen = isRoot || hasMatchingDescendant(item, targetId)
+  const isOpen =
+    collapseStates[id] !== undefined ? collapseStates[id] : initialOpen
+
   if (isLeaf) {
     return (
       <SidebarMenuButton
-        onClick={() => {
-          setSelectedItem(item) // 선택된 항목 업데이트
-        }}
-        className={`data-[active=true]:bg-transparent ${
-          selectedItem?.id === id ? 'bg-blue-100 text-blue-600' : ''
-        }`}
+        onClick={() => setSelectedItem(item)}
+        className={selectedItem?.id === id ? 'bg-blue-100 text-blue-600' : ''}
       >
-        <File />
-        {title}
+        <File /> {title}
       </SidebarMenuButton>
     )
   }
 
-  // 하위 아이템이 있는 경우 (Folder 렌더링)
   return (
     <SidebarMenuItem>
       <Collapsible
         className='group/collapsible [&[data-state=open]>button>svg:first-child]:rotate-90'
-        defaultOpen={
-          isRoot ||
-          (paramId &&
-            item.subItems.some((subItem) => subItem.id === parseInt(paramId)))
-        }
+        open={isOpen}
+        onOpenChange={(open) => setCollapseState(id, open)}
       >
         <CollapsibleTrigger asChild>
           <SidebarMenuButton>
             <ChevronRight className='transition-transform' />
-            <Folder />
-            {title}
+            <Folder /> {title}
           </SidebarMenuButton>
         </CollapsibleTrigger>
         <CollapsibleContent>
@@ -85,7 +141,7 @@ const Tree = React.memo(function Tree({
                 item={subItem}
                 setSelectedItem={setSelectedItem}
                 selectedItem={selectedItem}
-                isRoot={false} // 하위 항목은 최상위가 아님
+                isRoot={false}
               />
             ))}
           </SidebarMenuSub>
@@ -95,16 +151,17 @@ const Tree = React.memo(function Tree({
   )
 })
 
-// SubNavGroup 컴포넌트 (최상위 트리 렌더링)
+interface SubNavGroupProps {
+  items: Array<TreeNavGroupItemType>
+  setSelectedItem: (item: TreeNavGroupItemType) => void
+  selectedItem: TreeNavGroupItemType | null
+}
+
 export function SubNavGroup({
   items,
   setSelectedItem,
   selectedItem,
-}: {
-  items: Array<TreeNavGroupItemType>
-  setSelectedItem: (item: TreeNavGroupItemType) => void
-  selectedItem: TreeNavGroupItemType | null
-}) {
+}: SubNavGroupProps) {
   return (
     <SidebarGroup>
       <SidebarGroupContent>
@@ -115,7 +172,7 @@ export function SubNavGroup({
               item={item}
               setSelectedItem={setSelectedItem}
               selectedItem={selectedItem}
-              isRoot={true} // 최상위 부모임을 명시
+              isRoot={true}
             />
           ))}
         </SidebarMenu>
