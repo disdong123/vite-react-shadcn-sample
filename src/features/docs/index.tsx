@@ -30,14 +30,14 @@ export default function Docs() {
   useEffect(() => {
     if (selectedItem) {
       setSelectedDoc(DocsUtils.getDocById(selectedItem.id, docs))
-      window.history.pushState({}, '', `/docs?docId=${selectedItem.id}`)
+      window.history.pushState({}, '', `/docs?id=${selectedItem.id}`)
     }
   }, [selectedItem])
 
-  // 컴포넌트가 최초 마운트 되는 경우 docId 가 있으면 해당 문서로 라우팅
+  // 컴포넌트가 최초 마운트 되는 경우 id 가 있으면 해당 문서로 라우팅
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search)
-    const docId = searchParams.get('docId')
+    const docId = searchParams.get('id')
     if (docId) {
       const selectedItem = TreeNavGroupUtils.getItemById(parseInt(docId), docs)
       if (selectedItem) {

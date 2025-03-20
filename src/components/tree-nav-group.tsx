@@ -38,6 +38,10 @@ const Tree = React.memo(function Tree({
   const { id, title, subItems } = item
   const isLeaf = subItems.length === 0 // 하위 아이템이 없는 경우 확인
 
+  // 편의상 이 컴포넌트를 이용할 경우 파라미터 이름을 id 로 지정합니다.
+  const searchParams = new URLSearchParams(window.location.search)
+  const paramId = searchParams.get('id')
+
   // 하위 아이템이 없는 경우 (Leaf)
   if (isLeaf) {
     return (
@@ -60,7 +64,11 @@ const Tree = React.memo(function Tree({
     <SidebarMenuItem>
       <Collapsible
         className='group/collapsible [&[data-state=open]>button>svg:first-child]:rotate-90'
-        defaultOpen={isRoot} // 최상위 부모만 기본적으로 열림
+        defaultOpen={
+          isRoot ||
+          (paramId &&
+            item.subItems.some((subItem) => subItem.id === parseInt(paramId)))
+        }
       >
         <CollapsibleTrigger asChild>
           <SidebarMenuButton>
