@@ -99,7 +99,6 @@ export function SubNavGroup({
 }) {
   return (
     <SidebarGroup>
-      <SidebarGroupLabel>Projects</SidebarGroupLabel>
       <SidebarGroupContent>
         <SidebarMenu>
           {items.map((item) => (
